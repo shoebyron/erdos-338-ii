@@ -1,0 +1,26 @@
+Erdos338.Bridge.boundedByOrder : Erdos338.Bridge.BoundedByOrder
+theorem Erdos338.Bridge.boundedByOrder : Erdos338.Bridge.BoundedByOrder :=
+Erdos338.Bridge.boundedByOrder_of_analyticInputs Erdos338.Bridge.uniformDensityInput
+  Erdos338.Bridge.uniformProgressionInput
+def Erdos338.Bridge.BoundedByOrder : Prop :=
+∃ f,
+  ∀ (A : Set ℕ) (h : ℕ),
+    Erdos338.Bridge.HasOrder A h →
+      (∃ t, Erdos338.Bridge.HasRestrictedOrder A t) → Erdos338.Bridge.HasRestrictedOrder A (f h)
+def Erdos338.Bridge.HasOrder : Set ℕ → ℕ → Prop :=
+fun A h ↦ ∀ᶠ (n : ℕ) in Filter.atTop, ∃ s, (∀ x ∈ s, x ∈ A) ∧ s.card ≤ h ∧ s.sum = n
+def Erdos338.Bridge.HasRestrictedOrder : Set ℕ → ℕ → Prop :=
+fun A t ↦ ∀ᶠ (n : ℕ) in Filter.atTop, Erdos338.Bridge.Rep A t n
+def Erdos338.Bridge.Rep : Set ℕ → ℕ → ℕ → Prop :=
+fun A h n ↦ ∃ s, (∀ x ∈ s, x ∈ A) ∧ s.card ≤ h ∧ s.sum id = n
+'Erdos338.Bridge.boundedByOrder' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos338.Bridge.uniformDensityInput' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos338.Bridge.uniformProgressionInput' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos338.Bridge.boundedByOrder_of_analyticInputs' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos338.FiniteModular.uniformModularBound' depends on axioms: [propext, Classical.choice, Quot.sound]
+[audit] kind = theorem; universe params = []; type = Erdos338.Bridge.BoundedByOrder; type closed = true
+[audit] constants reachable = 15240; theorems among them = 9897
+[audit] axioms reachable = [propext, Classical.choice, Quot.sound]
+[audit] constants missing from environment = []
+[audit] unsafe/partial constants reachable = []
+[audit] PASS: only propext, Classical.choice, Quot.sound

@@ -1,0 +1,18 @@
+# Lean and Lake build output
+.lake/
+build/
+*.olean
+*.ilean
+
+# LaTeX build output
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
+
+# OS files
+.DS_Store
+
+# Keep the recorded audit logs
+!audit/logs/*.log

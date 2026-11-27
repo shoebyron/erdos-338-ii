@@ -1,0 +1,26 @@
+[audit] reachable constants by defining module (total 15240):
+[audit]   Aesop: 1
+[audit]   Batteries: 121
+[audit]   BoundedByOrderFixed: 22
+[audit]   CollisionDensity: 28
+[audit]   CommonWindows: 1
+[audit]   DensityPartners: 1
+[audit]   Erdos338Unconditional: 2
+[audit]   FiniteModular: 59
+[audit]   InfiniteLevels: 1
+[audit]   Init: 5628
+[audit]   KneserFamily: 1
+[audit]   LemmaThree: 27
+[audit]   Mathlib: 9170
+[audit]   MiscYD.AddCombi.Kneser.Kneser: 9
+[audit]   MiscYD.AddCombi.Kneser.MulStab: 41
+[audit]   PaddedEmbedding: 7
+[audit]   PaddedProgression: 37
+[audit]   ProductiveWindow: 12
+[audit]   SingleSetCovering: 28
+[audit]   TwoScale: 19
+[audit]   UniformProgression: 21
+[audit]   WeightedCount: 4
+[audit] closure mentions Erdos338.Bridge.AsymptoticKneser: false
+[audit] closure mentions Erdos338.Bridge.boundedByOrder_of_asymptoticKneser: false
+[audit] closure mentions Erdos338.Bridge.uniformDensityInput_of_hhp: false

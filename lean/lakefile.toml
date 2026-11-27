@@ -1,0 +1,10 @@
+name = "erdos338finite"
+defaultTargets = ["FiniteModular"]
+
+[[require]]
+name = "MiscYD"
+git = "https://github.com/YaelDillies/misc-yd.git"
+rev = "cd12c538d66f15a358a6904e7c847cd67661096f"
+
+[[lean_lib]]
+name = "FiniteModular"

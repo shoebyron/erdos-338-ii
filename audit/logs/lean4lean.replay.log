@@ -1,0 +1,54 @@
+lean4lean found a problem in Erdos338Unconditional:
+failed to read file 'C:\e338\orig\.lake\build\lib\lean\Erdos338Unconditional.olean', incompatible header
+lean4lean found a problem in CommonWindows:
+failed to read file 'C:\e338\orig\.lake\build\lib\lean\CommonWindows.olean', incompatible header
+lean4lean found a problem in TwoScale:
+failed to read file 'C:\e338\orig\.lake\build\lib\lean\TwoScale.olean', incompatible header
+lean4lean found a problem in ProductiveWindow:
+failed to read file 'C:\e338\orig\.lake\build\lib\lean\ProductiveWindow.olean', incompatible header
+lean4lean found a problem in SingleSetCovering:
+failed to read file 'C:\e338\orig\.lake\build\lib\lean\SingleSetCovering.olean', incompatible header
+lean4lean found a problem in PaddedEmbedding:
+failed to read file 'C:\e338\orig\.lake\build\lib\lean\PaddedEmbedding.olean', incompatible header
+lean4lean found a problem in PaddedProgression:
+failed to read file 'C:\e338\orig\.lake\build\lib\lean\PaddedProgression.olean', incompatible header
+lean4lean found a problem in KneserFamily:
+failed to read file 'C:\e338\orig\.lake\build\lib\lean\KneserFamily.olean', incompatible header
+lean4lean found a problem in InfiniteLevels:
+failed to read file 'C:\e338\orig\.lake\build\lib\lean\InfiniteLevels.olean', incompatible header
+lean4lean found a problem in WeightedCount:
+failed to read file 'C:\e338\orig\.lake\build\lib\lean\WeightedCount.olean', incompatible header
+lean4lean found a problem in CollisionDensity:
+failed to read file 'C:\e338\orig\.lake\build\lib\lean\CollisionDensity.olean', incompatible header
+lean4lean found a problem in DensityPartners:
+failed to read file 'C:\e338\orig\.lake\build\lib\lean\DensityPartners.olean', incompatible header
+lean4lean found a problem in LemmaThree:
+failed to read file 'C:\e338\orig\.lake\build\lib\lean\LemmaThree.olean', incompatible header
+lean4lean found a problem in UniformProgression:
+failed to read file 'C:\e338\orig\.lake\build\lib\lean\UniformProgression.olean', incompatible header
+lean4lean found a problem in BoundedByOrderFixed:
+failed to read file 'C:\e338\orig\.lake\build\lib\lean\BoundedByOrderFixed.olean', incompatible header
+lean4lean found a problem in FiniteModular:
+failed to read file 'C:\e338\orig\.lake\build\lib\lean\FiniteModular.olean', incompatible header
+lean4lean found a problem in MiscYD.AddCombi.Kneser.MulStab:
+failed to read file 'C:\e338\orig\.lake\packages\MiscYD\.lake\build\lib\lean\MiscYD\AddCombi\Kneser\MulStab.olean', incompatible header
+lean4lean found a problem in MiscYD.AddCombi.Kneser.Kneser:
+failed to read file 'C:\e338\orig\.lake\packages\MiscYD\.lake\build\lib\lean\MiscYD\AddCombi\Kneser\Kneser.olean', incompatible header
+replaying Erdos338Unconditional
+replaying CommonWindows
+replaying TwoScale
+replaying ProductiveWindow
+replaying SingleSetCovering
+replaying PaddedEmbedding
+replaying PaddedProgression
+replaying KneserFamily
+replaying InfiniteLevels
+replaying WeightedCount
+replaying CollisionDensity
+replaying DensityPartners
+replaying LemmaThree
+replaying UniformProgression
+replaying BoundedByOrderFixed
+replaying FiniteModular
+replaying MiscYD.AddCombi.Kneser.MulStab
+replaying MiscYD.AddCombi.Kneser.Kneser

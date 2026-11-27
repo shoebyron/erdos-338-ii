@@ -1,0 +1,45 @@
+﻿leanchecker: %USERPROFILE%\.elan\toolchains\leanprover--lean4---v4.35.0-rc3\bin\leanchecker.exe
+[MiscYD] exit=0 time=25s
+replaying MiscYD.AddCombi.Kneser.MulStab
+replaying MiscYD.AddCombi.Kneser.Kneser
+[FiniteModular] exit=0 time=24s
+replaying FiniteModular
+[BoundedByOrderFixed] exit=1 time=23s
+leanchecker found a problem in BoundedByOrderFixed
+replaying BoundedByOrderFixed
+uncaught exception: failed to read file 'C:\e338\orig\.lake\packages\mathlib\.lake\build\lib\lean\Mathlib\Topology\Filter.olean.private'
+[UniformProgression] exit=0 time=32s
+replaying UniformProgression
+[LemmaThree] exit=0 time=24s
+replaying LemmaThree
+[DensityPartners] exit=0 time=17s
+replaying DensityPartners
+[CollisionDensity] exit=0 time=24s
+replaying CollisionDensity
+[UniformDensity] exit=0 time=25s
+replaying UniformDensity
+[WeightedCount] exit=0 time=25s
+replaying WeightedCount
+[InfiniteLevels] exit=0 time=18s
+replaying InfiniteLevels
+[KneserFamily] exit=0 time=25s
+replaying KneserFamily
+[ProgressionFromKneser] exit=0 time=25s
+replaying ProgressionFromKneser
+[BoundFromKneser] exit=0 time=24s
+replaying BoundFromKneser
+[PaddedProgression] exit=0 time=24s
+replaying PaddedProgression
+[PaddedEmbedding] exit=0 time=24s
+replaying PaddedEmbedding
+[SingleSetCovering] exit=0 time=24s
+replaying SingleSetCovering
+[ProductiveWindow] exit=0 time=24s
+replaying ProductiveWindow
+[TwoScale] exit=0 time=24s
+replaying TwoScale
+[CommonWindows] exit=0 time=17s
+replaying CommonWindows
+[Erdos338Unconditional] exit=0 time=24s
+replaying Erdos338Unconditional
+modules failing kernel replay: 1 of 20

@@ -1,0 +1,17 @@
+def Erdos338.HasOrder : Set ℕ → ℕ → Prop :=
+fun A h ↦ ∀ᶠ (m : ℕ) in Filter.atTop, ∃ S, (∀ x ∈ S, x ∈ A) ∧ S.card ≤ h ∧ S.sum = m
+def Erdos338.HasRestrictedOrder : Set ℕ → ℕ → Prop :=
+fun A t ↦ ∀ᶠ (m : ℕ) in Filter.atTop, ∃ S, (∀ x ∈ S, x ∈ A) ∧ S.card ≤ t ∧ ∑ x ∈ S, x = m
+Erdos338Audit.bounded_by_order : ∃ f,
+  ∀ (A : Set ℕ) (h : ℕ),
+    Erdos338.HasOrder A h → (∃ t, Erdos338.HasRestrictedOrder A t) → Erdos338.HasRestrictedOrder A (f h)
+'Erdos338Audit.bounded_by_order' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Erdos338.erdos_338.variants.bounded_by_order' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]
+[audit] upstream statement: ∃ f,
+  ∀ (A : Set ℕ) (h : ℕ),
+    Erdos338.HasOrder A h → (∃ t, Erdos338.HasRestrictedOrder A t) → Erdos338.HasRestrictedOrder A (f h)
+[audit] audit statement:    ∃ f,
+  ∀ (A : Set ℕ) (h : ℕ),
+    Erdos338.HasOrder A h → (∃ t, Erdos338.HasRestrictedOrder A t) → Erdos338.HasRestrictedOrder A (f h)
+[audit] PASS: audit statement and upstream `erdos_338.variants.bounded_by_order` have identical types (Expr equality up to bound-variable names)
+[audit] audit proof term: Erdos338.Bridge.boundedByOrder

@@ -1,0 +1,534 @@
+\documentclass[11pt,reqno]{amsart}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{microtype}
+\usepackage[margin=1.2in]{geometry}
+\usepackage{xcolor}
+\usepackage{url}
+\usepackage[colorlinks=true,linkcolor=blue!50!black,citecolor=blue!50!black,urlcolor=blue!50!black]{hyperref}
+\hypersetup{pdftitle={A uniform bound for the restricted order of an asymptotic basis},pdfauthor={Excession}}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\lean}[1]{\nolinkurl{#1}}
+\makeatletter\g@addto@macro\UrlBreaks{\do\_\do\.}\makeatother
+\setlength{\emergencystretch}{2em}
+
+\begin{document}
+\title[A uniform bound for restricted order]{A uniform bound for the restricted order of an asymptotic basis}
+\author{}
+\address{Excession}
+\urladdr{https://exsn.org}
+\date{November 2026}
+\subjclass[2020]{Primary 11B13; Secondary 11B05, 68V15}
+\keywords{Asymptotic basis, restricted order, subset sums, Kneser's addition theorem, formal verification}
+
+\begin{abstract}
+Suppose every sufficiently large integer is a sum of at most \(h\) elements of a set \(A\) of nonnegative integers, with repetitions allowed. If \(A\) has finite restricted order, we prove that its restricted order is at most \(f(h)\), where \(f\) is independent of \(A\). This answers the boundedness question of Erd\H{o}s and Graham. We give a recursive choice of \(f\). Two estimates account for the uniformity. The first bounds the number of distinct summands needed to reach a given residue modulo any integer. The second represents every sufficiently large multiple of a suitable modulus, even after a prescribed number of elements of \(A\) have been deleted. A finite covering argument at two consecutive interval lengths allows the rank with many representations to vary with the interval. The theorem has been formalized in Lean.
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}
+
+Write \(\mathbb N=\{0,1,2,\ldots\}\). An asymptotic basis \(A\subseteq\mathbb N\) has \emph{ordinary order} \(h\) if \(h\) is the least integer such that every sufficiently large integer is a sum of at most \(h\) elements of \(A\), with repetitions allowed. Its \emph{restricted order} is the least such integer when the summands must be distinct. The latter order may fail to exist. For example, \(A=3\mathbb N\cup\{1\}\) has ordinary order three, while a sum of distinct elements of \(A\) is always zero or one modulo three.
+
+Erd\H{o}s and Graham \cite[p.~206, question 3(ii)]{EG80} asked whether the restricted order, when finite, admits an upper bound in terms of the ordinary order alone. This is the boundedness question in Erd\H{o}s Problem~338. We prove the following formulation, in which \(h\) may be any upper bound for the ordinary order.
+
+\begin{theorem}\label{thm:main}
+There is a function \(f:\mathbb N\to\mathbb N\) with the following property. Suppose every sufficiently large integer is a sum of at most \(h\) elements of \(A\subseteq\mathbb N\), with repetitions allowed. If \(A\) has finite restricted order, then every sufficiently large integer is a sum of at most \(f(h)\) distinct elements of \(A\).
+\end{theorem}
+
+Among bases of ordinary order two, the largest restricted order is four \cite{Hen05}. For each \(h\ge3\), Hegyv\'ari, Hennecart and Plagne \cite[Theorem~4]{HHP07} constructed a basis of ordinary order \(h\) with finite restricted order at least \(2^{h-2}+h-1\). Thus any upper bound in Theorem~\ref{thm:main} must grow at least exponentially. Our recursion gives a much larger bound.
+
+Chen, Yang and Zhao \cite[Theorems~2 and~3]{CYZ26} characterize finite restricted order for an asymptotic basis by completeness modulo every positive integer. Here completeness means that finite subsets of \(A\) represent every residue. They also show that for each such \(A\) one length suffices for every modulus. Lemma~\ref{lem:modular} bounds this length in terms of a density parameter for short restricted sums and their maximum number of summands. A counting argument supplies the parameter from \(h\) alone.
+
+The second part of the proof constructs a progression on which representations survive deletions. We adapt the disjoint-representation count of Chen, Yang and Zhao \cite[Lemmas~3 and~4]{CYZ26}. At each sufficiently large interval length \(X\), some rank \(r\le h\) produces many integers with disjoint representations of length at most \(2r\). The rank can change at \(X+1\). A common multiple of the finitely many rank moduli lets us use both intervals to represent a large target, with the number of summands fixed before \(A\) is chosen. The finite form of Kneser's addition theorem \cite{DeV13} enters both the modular estimate and the covering argument.
+
+\section{Density of sums with distinct summands}\label{sec:density}
+
+Intervals throughout are intervals of integers. For \(B\subseteq\mathbb N\), write \(B[N]=B\cap[0,N)\). Let
+\(R_h(A)\) be the set of sums of at most \(h\) distinct elements of \(A\),
+including the empty sum.
+
+\begin{lemma}\label{lem:collision-density}
+Suppose every sufficiently large integer is a sum of at most \(h\)
+elements of \(A\), with repetition allowed, where \(h\ge1\). Put
+\[
+  m(h)=2\bigl(1+h(h+1)\bigr)^h.
+\]
+Then \(N\le m(h)|R_h(A)[N]|\) for every sufficiently large \(N\).
+\end{lemma}
+
+\begin{proof}
+The excess of a multiset is its cardinality minus the size of its support.
+Write \(B_{k,d}\) for the integers representable by a multiset in \(A\)
+of size at most \(k\) and excess at most \(d\). Thus
+\(B_{h,0}=R_h(A)\), and \(B_{h,h}\) is cofinite.
+The set \(A\) is infinite, since a finite set has only finitely many sums
+of length at most \(h\). Fix \(T\subseteq A\) with \(|T|=h+1\),
+and let \(U=\max T\).
+
+For \(d\ge1\) and every \(X\) we claim that
+\begin{equation}\label{eq:excess-step}
+  |B_{h,d}[X]|\le \bigl(1+h(h+1)\bigr)|B_{h,d-1}[X+U]|.
+\end{equation}
+For each \(y\in B_{h-1,d-1}[X]\), fix one admissible multiset \(M_y\)
+representing \(y\). Every \(x\in B_{h,d}[X]\setminus B_{h,d-1}\)
+has a representation with a repeated element \(a\). Erase one copy.
+The remainder \(y=x-a\) belongs to \(B_{h-1,d-1}[X]\).
+If \(a\) were absent from \(M_y\), adding it to \(M_y\) would give
+\(x\in B_{h,d-1}\). Hence each such \(x\) is \(y+a\) with
+\(a\in\operatorname{supp}M_y\); there are at most \(h\) choices per \(y\).
+Moreover, one can choose \(t\in T\setminus\operatorname{supp}M_y\).
+Then \(y+t\in B_{h,d-1}[X+U]\), and the pair \((t,y+t)\) determines
+\(y\). Thus \(|B_{h-1,d-1}[X]|\le(h+1)|B_{h,d-1}[X+U]|\).
+Counting also the \(x\) already in \(B_{h,d-1}\) proves
+\eqref{eq:excess-step}.
+
+Choose \(L\) with \([L,\infty)\subseteq B_{h,h}\). For
+\(N\ge2(hU+L)\), iterate \eqref{eq:excess-step} starting at \(X=N-hU\).
+This gives
+\[
+  \frac N2\le N-hU-L\le |B_{h,h}[N-hU]|
+      \le \bigl(1+h(h+1)\bigr)^h |R_h(A)[N]|.
+  \qedhere
+\]
+\end{proof}
+
+One can also obtain an order-dependent density bound from the comparison
+theorem of Hegyv\'ari, Hennecart and Plagne~\cite{HHP03,Heg17}.
+For \(A'=1+(A\cup\{0\})\), the ordinary sumset of exactly \(h\) members
+of \(A'\) is cofinite: pad a representation from \(A\) with zeros
+before translating. Subtracting \(h\) from a sum of exactly \(h\)
+distinct members of \(A'\) gives an element of \(R_h(A)\), since a
+summand zero may be discarded. Their comparison gives a positive
+lower-density bound depending only on \(h\). Lemma~\ref{lem:collision-density}
+supplies the denominator used below directly.
+
+\section{Uniform bounds for modular witnesses}\label{sec:modular}
+
+Let \(a_1,\dots,a_n\) be a sequence in \(G=\mathbb Z/q\mathbb Z\),
+with \(q\ge1\). Write \(B_j\) for the residues represented by at most
+\(j\) distinct indices. Different indices may carry the same value.
+For \(m\ge1\) and \(j\ge1\) set
+\[
+ L=4m^2,\qquad S(j,m)=(2j+1)L,\qquad m'(j,m)=16 S(j,m)m^2.
+\]
+Define \(b(0,m)=m\) and
+\[
+ b(j,m)=\max\{S(j,m),\, b(j-1,m'(j,m))\}\qquad(j\ge1).
+\]
+
+\begin{lemma}\label{lem:modular}
+If every residue is a subset sum of the sequence and \(m|B_h|\ge q\),
+then \(B_{b(h,m)}=G\).
+\end{lemma}
+
+\begin{proof}
+In a group of order \(t\), a shortest subsequence representing a given
+subset sum has length at most \(t-1\): its successive partial sums,
+including zero, are distinct, since a repeated partial sum permits a
+zero-sum block to be removed. For \(h=0\), the hypothesis implies
+\(q\le m\), and this observation proves the result.
+
+Use induction on \(j=h\ge1\). Abbreviate \(S=S(j,m)\) and \(e=|B_{j-1}|\).
+If \(m'(j,m)e\ge q\), apply the induction hypothesis. Otherwise
+\(16Sm^2e<q\). Write \(R=B_j\), \(M=|R|\), and choose an index set
+\(W_x\) of size at most \(j\) representing each \(x\in R\).
+A fixed index \(i\) belongs to at most \(e\) of the \(W_x\), since
+\(x\mapsto x-a_i\) injects those residues into \(B_{j-1}\).
+Let \(p_z\) count the ordered pairs \(x+y=z\) in \(R^2\) with disjoint
+index sets. Each \(x\) loses at most \(je\) choices of \(y\). Since
+\(q/m\le M\le q\) and \(j\le S\),
+\[
+ \sum_z p_z\ge M^2-Mje\ge\frac{15q^2}{16m^2}.
+\]
+Put \(P=\{z:p_z\ge q/(4m^2)\}\) and \(D=P\cup\{0\}\).
+As \(p_z\le q\), the last inequality gives
+\(|P|\ge 11q/(16m^2)\), hence \(L|D|\ge2q\).
+For \(z\in P\), a forbidden set of at most \(S\) indices rules out at
+most \(2Se<q/(4m^2)\) pairs in its fibre: specifying either coordinate
+determines the other. Consequently every \(z\in D\) has a representation
+on at most \(2j\) indices avoiding any such forbidden set. For zero use
+the empty set.
+
+Let \(H\) be the stabilizer of the \(L\)-fold sumset \(LD\).
+Kneser's addition theorem in the quotient by \(H\) gives
+\[
+ |LD|\ge L|D|-(L-1)|H|.
+\]
+Indeed, every partial sumset in the quotient has trivial stabilizer,
+since any translation fixing it fixes the full sumset. The two-set
+inequality therefore iterates. From \(|LD|\le q\) and \(L|D|\ge 2q\)
+we obtain \([G:H]\le L-1\). Given \(x\in G\), compress a subset-sum
+representation in \(G/H\) by the partial-sum observation. We obtain an
+index set \(E\) of size at most \(L\) such that \(x-\sum_{i\in E}a_i\in H\).
+Since \(0\in LD\), we have \(H\subseteq LD\). Represent the difference
+by \(L\) terms of \(D\), and replace those terms successively by their
+short witnesses, avoiding \(E\) and all previous witnesses. The total
+number of indices is at most \(L+2jL=S\), so every avoidance step is
+valid. This proves the induction step.
+\end{proof}
+
+\begin{lemma}\label{lem:modular-lift}
+Suppose \(A\) has finite restricted order and
+\(N\le m|R_h(A)[N]|\) eventually. For every \(q\ge1\) every residue
+modulo \(q\) is represented by a subset of \(A\) of size at most \(b(h,m)\).
+\end{lemma}
+
+\begin{proof}
+Let \(V\) be the image of \(R_h(A)\) modulo \(q\). Among the first \(kq\)
+nonnegative integers only \(k|V|\) belong to classes in \(V\).
+For sufficiently large \(k\), the assumed count gives \(q\le m|V|\).
+For each residue choose a finite witness in \(A\), using at most \(h\)
+elements for residues in \(V\). Such witnesses exist since every
+sufficiently large integer has a restricted representation. Enumerate
+the union of these finitely many witnesses and reduce its elements
+modulo \(q\). The resulting sequence satisfies Lemma~\ref{lem:modular},
+and its indices correspond to distinct elements of \(A\).
+\end{proof}
+
+\section{A rank with many disjoint representations}\label{sec:rich}
+
+Fix positive integers \(h,m\) and a nonnegative integer \(b\). Assume
+\(N\le m|R_h(A)\cap[0,N)|\) for all sufficiently large \(N\).
+At each rank \(r\) we will reserve \(B_r\) slots. A slot holds an
+integer with several disjoint representations by at most \(2r\)
+elements of \(A\). The number \(L_r\) measures how frequently such
+integers occur. Following the descending-rank count of
+Chen, Yang and Zhao \cite[Lemmas 3 and 4]{CYZ26}, we choose the
+multiplicity at rank \(r\) after reserving the slots at higher ranks.
+
+For positive integers \(L\) put
+\[
+ c(L)=4(L+1),\qquad T(L)=2c(L)+4L^2+2c(L)L .
+\]
+Starting with \(\alpha_h=1/(2m)\), define, in order \(r=h,h-1,\ldots,1\),
+\begin{align}
+ L_r&=\lceil 8/\alpha_r^2\rceil,\qquad B_r=2T(L_r),\notag\\
+ Q_r&=1+b+\sum_{j=r+1}^{h}2jB_j+2r(B_r-1),\qquad
+ \alpha_{r-1}=\frac{\alpha_r^2}{64rQ_r}.\label{eq:padded-schedule}
+\end{align}
+In fact each \(\alpha_r^{-1}\) is an integer. All these parameters depend
+only on \(h,m,b\). Write \(D_r\) for the positive integers with \(Q_r\)
+pairwise disjoint representations, each by a subset of \(A\) of
+cardinality at most \(2r\), and set \(C_r=D_r\cup\{0\}\).
+
+\begin{lemma}\label{lem:productive-rank}
+For every sufficiently large \(N\) there is an \(r\in\{1,\ldots,h\}\)
+such that \(6N\le L_r|C_r\cap[0,2N]|\).
+\end{lemma}
+
+\begin{proof}
+Take \(N\) large enough that \(\alpha_j N\ge1\) for \(0\le j\le h\).
+The density hypothesis gives
+\(|R_h(A)\cap[1,N]|\ge N/m-1\ge\alpha_h N\).
+Choose the least positive \(r\) with
+\(|R_r(A)\cap[1,N]|\ge\alpha_r N\). Put
+\[
+ X=R_r(A)\cap[1,N],\qquad M=|X|,\qquad
+ e=|R_{r-1}(A)\cap[0,N]|.
+\]
+If \(r>1\), minimality gives \(e\le 1+\alpha_{r-1}N\).
+If \(r=1\), the only sum of rank zero is zero, so \(e=1\).
+In either case \(e\le2\alpha_{r-1}N\) and \(\alpha_r N\le M\le N\).
+
+For each \(x\in X\), choose a witness \(F_x\subseteq A\) of size
+at most \(r\) and sum \(x\). Any fixed element \(a\in A\) occurs in at
+most \(e\) of the witnesses: erasing it gives the distinct sums
+\(x-a\in R_{r-1}(A)\cap[0,N]\).
+Let \(p_n\) count the ordered pairs \(x,y\in X\) with \(x+y=n\)
+and \(F_x\cap F_y=\varnothing\). Each \(x\) has at most \(re\)
+partners excluded by intersection. Hence
+\[
+ M^2\le \sum_{n=1}^{2N}p_n+rMe,\qquad p_n\le M .
+\]
+The second estimate holds because \(n,x\) determine \(y\).
+
+For \(n\notin C_r\), choose a maximal disjoint family among the unions
+\(F_x\cup F_y\) counted by \(p_n\). If \(p_n>0\), all these unions
+are nonempty and have sum \(n\). Thus at most \(Q_r-1\) unions can be
+chosen. Their union meets every counted pair and has size at most
+\(2r(Q_r-1)\). Each of its elements occurs in at most \(2e\) counted
+pairs, since fixing either coordinate determines its partner. Therefore
+\(p_n\le4r(Q_r-1)e\) outside \(C_r\).
+
+Put \(D=|C_r\cap[0,2N]|\). The preceding bounds give
+\[
+ M^2\le ND+8r(Q_r-1)eN+rMe.
+\]
+Divide by \(N\), use \(M\le N\) in the error term, and substitute
+\eqref{eq:padded-schedule}. We obtain
+\[
+ D\ge\alpha_r^2N-r(8Q_r-7)e
+ \ge\alpha_r^2N\left(1-\frac{8Q_r-7}{32Q_r}\right)
+ \ge\tfrac34\alpha_r^2N.
+\]
+Multiplication by \(L_r\ge8/\alpha_r^2\) proves the assertion.
+\end{proof}
+
+\section{From productive windows to a progression}
+\label{sec:adjacent}
+
+For a set \(C\subseteq\mathbb N\) containing zero, write \(kC\) for its
+ordinary \(k\)-fold sumset. In particular \(0C=\{0\}\), and a
+representation in fewer than \(k\) terms can be completed with zeros.
+We first give a finite covering lemma, then apply it separately at each rank.
+
+\subsection{Covering the middle of a finite interval}
+
+Veljjanoski \cite{Vel26} bounded the restricted order in terms of the
+lower density of \(A\) when that density is positive and every finite
+deletion leaves a basis. We use the following covering argument from his
+formalization. Our application normalizes a set \(C_r\) by dividing its
+elements by their common divisor. Write \(kE\) for sums of exactly \(k\)
+members of \(E\), allowing repetitions.
+
+\begin{lemma}\label{lem:normalized-cover}
+Let \(E\subseteq\mathbb N\), let \(z,L\ge1\) be integers, and suppose
+\[
+  0,z\in E,\qquad \gcd(E\cap[0,z])=1,\qquad
+  L\,|E\cap[0,z)|\ge z.
+\]
+Put \(c=4(L+1)\). For all integers \(k,u\ge0\),
+\[
+  cz\le u,\qquad u+cz\le kz \quad\Longrightarrow\quad u\in kE.
+\]
+\end{lemma}
+
+\begin{proof}
+Let \(G=\mathbb Z/z\mathbb Z\) and let \(S\) be the image of
+\(E\cap[0,z]\) in \(G\). It contains zero, generates \(G\) by the gcd
+condition, and has size \(|E\cap[0,z)|\), since the endpoints have the
+same image. In particular \(c|S|\ge2z\).
+
+Suppose \(cS\ne G\) and write \(H\) for its stabilizer. Then \(H\)
+is proper. Since \(0\in S\) and \(S\) generates \(G\), the set
+\(S+H\) contains at least two cosets of \(H\). The iterated finite
+Kneser inequality gives
+\[
+ |cS|\ge c|S+H|-(c-1)|H|
+       \ge \tfrac c2|S+H|+|H|
+       \ge z+|H|,
+\]
+a contradiction. Thus \(cS=G\).
+
+Choose \(c\) members of \(E\cap[0,z]\) whose sum \(t\) is congruent
+to \(u\) modulo \(z\). Since \(t\le cz\le u\), the quotient
+\(j=(u-t)/z\) is a nonnegative integer. Also \(u\le(k-c)z\), so
+\(j\le k-c\). Append \(j\) copies of \(z\) and \(k-c-j\) copies
+of zero. The resulting \(k\) summands have sum \(u\).
+\end{proof}
+
+\subsection{Two consecutive windows}
+
+\begin{lemma}\label{lem:productive-cover}
+Suppose \(0\in C\subseteq\mathbb N\) and \(L\ge1\). There is \(d\ge1\)
+such that, for every sufficiently large \(X\) satisfying
+\(6X\le L|C\cap[0,2X]|\), there is a \(p\in C\) with
+\[
+  0<p\le2X,\qquad X\le Lp,\qquad d\le L.
+\]
+For this \(p\), whenever \(d\mid u\), \(c(L)p\le u\), and
+\(u+c(L)p\le kp\), we have \(u\in kC\).
+\end{lemma}
+
+\begin{proof}
+If \(C=\{0\}\), no sufficiently large \(X\) meets the hypothesis.
+Otherwise take \(d=\gcd(C)\) and \(E=\{y\in\mathbb N:dy\in C\}\).
+Since \(E\) generates the unit ideal in \(\mathbb Z\), a finite
+integer combination of its elements equals one. Its support is a
+finite gcd witness.
+Put \(V=C\cap[0,2X]\) and \(p=\max V\). Since \(|V|\le p+1\),
+the hypothesis gives \(X\le Lp\) for \(X\ge L\); thus \(p>0\).
+Write \(p=dz\). Along the windows in question \(z\ge X/(Ld)\),
+so \(E\cap[0,z]\) contains the fixed gcd witness once \(X\) is large.
+Also \(|V|\le 2X/d+1\); if \(d>L\) this contradicts
+\(6X\le L|V|\) for large \(X\). Finally,
+\[
+   L|E\cap[0,z)|=L(|V|-1)\ge6X-L\ge z .
+\]
+Lemma~\ref{lem:normalized-cover} applies to \(E\) with endpoint
+\(z\). It represents \(u/d\) in \(kE\) under the displayed
+hypotheses on \(u\). Multiplication by \(d\) gives \(u\in kC\).
+\end{proof}
+
+\begin{proposition}\label{prop:padded-progression}
+Fix \(h,m\ge1\) and \(b\ge0\), and use the parameters of
+Lemma~\ref{lem:productive-rank}. If
+\(N\le m|R_h(A)\cap[0,N)|\) for all sufficiently large \(N\),
+there are \(g\ge1\) and \(N_0\)
+such that, for every \(n\ge N_0\) with \(g\mid n\) and every
+finite \(F\subseteq A\) of size at most \(b\),
+\[
+    n\in R_K(A\setminus F),\qquad K=\sum_{r=1}^h 2rB_r .
+\]
+\end{proposition}
+
+\begin{proof}
+Apply Lemma~\ref{lem:productive-cover} to \(C_r,L_r\) for each rank
+\(r\). This fixes positive integers \(d_r\). Set \(g=\prod_{r=1}^h d_r\).
+Take \(X_0\ge1\) beyond the finitely many thresholds in that lemma
+and in Lemma~\ref{lem:productive-rank}. For each \(X\ge X_0\) choose
+a productive rank \(i(X)\) and its element \(p(X)\in C_{i(X)}\).
+These choices can vary at every window.
+
+Fix a sufficiently large multiple \(n\) of \(g\). Let \(X\) be the
+largest window satisfying \(2c(L_{i(X)})X\le n\). The window \(X_0\)
+qualifies for large \(n\), and every qualifying window is at most
+\(n\). Write
+\[
+    i=i(X),\quad j=i(X+1),\quad I=L_i,\quad J=L_j,\quad
+    p=p(X),\quad q=p(X+1),\quad d=d_i .
+\]
+The choice of \(X\) gives
+\[
+    2c(I)X\le n<2c(J)(X+1),\qquad
+    X\le Ip,\quad X+1\le Jq .
+\]
+Put \(a=c(I)p\le n\), and divide \(n-a\) by \(dq\) to write
+\[
+     n=u+v,\qquad u=a+((n-a)\bmod dq),\qquad
+     v=dq\left\lfloor\frac{n-a}{dq}\right\rfloor .
+\]
+Since \(d\mid n,v\), also \(d\mid u\). The first window gives
+\(d\le I\), and the next one gives \(q\le2(X+1)\le4X\).
+Consequently \(dq\le4I^2p\), so
+\[
+ a\le u,\qquad u+a\le (2c(I)+4I^2)p\le T(I)p.
+\]
+Lemma~\ref{lem:productive-cover} gives \(u\in T(I)C_i\).
+Meanwhile \(v\) is a nonnegative multiple of \(q\) with
+\[
+    v/q\le n/q<2c(J)(X+1)/q\le2c(J)J\le T(J).
+\]
+Copies of \(q\) and zero therefore put \(v\) in \(T(J)C_j\).
+Since \(B_r=2T(L_r)\), even \(i=j\) fits the allotted number of
+summands of a rank. Fill unused positions with zeros to obtain
+\(n\in\sum_{r=1}^h B_rC_r\).
+
+It remains to choose distinct elements of \(A\setminus F\).
+Process those positions in descending order of \(r\), assigning the
+empty set to every zero. At the \(\ell\)-th position of rank \(r\)
+the total size of \(F\) and all witnesses already used is at most
+\[
+       b+\sum_{s=r+1}^h 2sB_s+2r(\ell-1)\ \le\ Q_r-1 .
+\]
+Every nonzero member of \(C_r\) has \(Q_r\) disjoint witnesses in
+\(A\), each of size at most \(2r\). At least one avoids all these
+forbidden elements. Taking their union gives a subset of
+\(A\setminus F\) with sum \(n\) and size at most \(K\).
+\end{proof}
+
+\section{Completion of the proof}\label{sec:conclusion}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+For \(h\ge1\), take \(m=m(h)\) from Lemma~\ref{lem:collision-density}
+and \(b=b(h,m)\) from Lemma~\ref{lem:modular}. With these values in
+\eqref{eq:padded-schedule}, set
+\[
+   f(h)=b+\sum_{r=1}^h 2rB_r=b+K .
+\]
+Set \(f(0)=0\). No set is an asymptotic basis of order at most zero.
+
+Fix \(A\) satisfying the two hypotheses. Lemma~\ref{lem:collision-density}
+gives the counting bound for \(R_h(A)\). Proposition~\ref{prop:padded-progression}
+now supplies a modulus \(g\ge1\) and a threshold \(N_0\) valid for every
+deletion of at most \(b\) elements. By Lemma~\ref{lem:modular-lift},
+for each residue \(v\) modulo \(g\) there is a finite \(E_v\subseteq A\)
+with \(|E_v|\le b\) and \(\sigma(E_v)\equiv v\pmod g\), where
+\(\sigma(E)=\sum_{x\in E}x\).
+
+Take \(n\ge N_0+\max_v\sigma(E_v)\) and \(v=n\bmod g\).
+Then \(n-\sigma(E_v)\ge N_0\) is a multiple of \(g\).
+Apply the proposition with \(F=E_v\). We obtain a subset of
+\(A\setminus E_v\) of size at most \(K\) and sum \(n-\sigma(E_v)\).
+Its union with \(E_v\) has at most \(K+b=f(h)\) elements and sum \(n\).
+\end{proof}
+
+\section{Verification and availability}\label{sec:verification}
+
+\subsection{Formalization}
+The result is accompanied by a Lean~4 project of nineteen modules. It pins Lean \lean{4.35.0-rc3} and the revisions of its dependencies, including Mathlib at commit \lean{c55e6e7}. The main formal statements are the following.
+\begin{itemize}[leftmargin=2em]
+\item \lean{Erdos338.Bridge.boundedByOrder}, in \lean{Erdos338Unconditional.lean}: Theorem~\ref{thm:main}. The ordinary representation uses a multiset, the restricted representation a finite set. Both cardinality conditions are inequalities. The quantifier over \(f\) precedes the quantifiers over \(A\) and \(h\). The threshold for a given \(A\) occurs inside an eventual statement on \(\mathbb N\).
+\item \lean{Erdos338.FiniteModular.uniformModularBound}, in \lean{FiniteModular.lean}: Lemma~\ref{lem:modular}.
+\end{itemize}
+The script \lean{Verify.ps1}, run with the switch \lean{-FetchCache}, builds \lean{FiniteModular} and checks the other eighteen modules in dependency order. According to the build log included with the project, this run ends with exit code zero, and the final declaration depends only on the axioms \lean{propext}, \lean{Classical.choice} and \lean{Quot.sound}.
+
+The finite Kneser theorem used by the project was formalized by Mantas Bak\v{s}ys and Ya\"el Dillies \cite{MiscYD}. The density argument uses the replacement method of Hegyv\'ari, Hennecart and Plagne and the related formalization of Problem~339 \cite{HHP03,Plby}. The module \lean{SingleSetCovering.lean} adapts the files \lean{Covering}, \lean{Structure}, and \lean{Shift} from Daniel Veljjanoski's project \cite{Vel26}, under its Apache~2.0 license.
+
+\subsection{Audit}
+A separate audit accompanies the project. Its logs record the following. A search of the dependencies of the final declaration finds the same three axioms and no unsafe or partial constant. Lean's kernel accepted an export of the dependencies of the audit theorem from an empty environment. A module-by-module replay with \lean{leanchecker} passed nineteen of twenty modules; the remaining module, \lean{BoundedByOrderFixed}, stopped on a file-read error and was replayed again separately. An attempted replay with the external checker \lean{lean4lean} could not read the compiled files and checked nothing.
+
+For comparison with the published conjecture, the audit compiled the upstream file for Problem~338 \cite{FormalConj} on the project toolchain. It used a reduced root utility import and preserved the upstream problem file. An audit theorem stated using the upstream definitions has \lean{Erdos338.Bridge.boundedByOrder} as its entire proof term. Lean reported that its type and the type of the upstream \lean{bounded_by_order} declaration are identical up to bound-variable names. The upstream repository at that revision pins Lean \lean{4.33.1}. The comparison took place on \lean{4.35.0-rc3}.
+
+\subsection{Availability}
+The Lean project, the audit files and logs, and checksums are available with this paper at \url{https://exsn.org}.
+
+\section*{Use of AI tools}
+The mathematical content of this paper, namely Theorem~\ref{thm:main} and its proof, and the Lean formalization, was generated by GPT-6.2 Astra (OpenAI). The formalization adapts the earlier formalizations credited in Section~\ref{sec:verification}.
+
+\begin{thebibliography}{HHP07}
+
+\bibitem[BD]{MiscYD}
+M.~Bak\v{s}ys and Y.~Dillies, \emph{Kneser's addition theorem}, Lean formalization
+in \href{https://github.com/YaelDillies/misc-yd/tree/cd12c538d66f15a358a6904e7c847cd67661096f/MiscYD/AddCombi/Kneser}{MiscYD}, revision \lean{cd12c53}.
+
+\bibitem[CYZ26]{CYZ26}
+S.-Q.~Chen, Q.-H.~Yang, and L.~Zhao,
+\emph{On a problem of Erd\H{o}s and Graham related to restricted order},
+preprint, 2026, \href{https://arxiv.org/abs/2611.33191v1}{arXiv:2611.33191v1}.
+
+\bibitem[DeV14]{DeV13}
+M.~DeVos, \emph{A short proof of Kneser's addition theorem for abelian groups},
+in \emph{Combinatorial and Additive Number Theory}, Springer Proc. Math. Stat.
+\textbf{101} (2014), 39--41, \href{https://arxiv.org/abs/1303.3539}{arXiv:1303.3539}.
+
+\bibitem[EG80]{EG80}
+P.~Erd\H{o}s and R.~L.~Graham, \href{https://www.renyi.hu/~p_erdos/1980-22.pdf}{\emph{On bases with an exact order}},
+Acta Arith. \textbf{37} (1980), 201--207.
+
+\bibitem[FC]{FormalConj}
+Formal Conjectures contributors, \emph{Erd\H{o}s Problem 338}, Lean statement,
+\href{https://github.com/google-deepmind/formal-conjectures/blob/ea8e3e198ded6fc73efb7f5653b74b28ac4ae1a8/FormalConjectures/ErdosProblems/338.lean}{formal-conjectures}, revision \lean{ea8e3e1}.
+
+\bibitem[Heg17]{Heg17}
+N.~Hegyv\'ari, \href{https://real-d.mtak.hu/1038/7/dc_1260_16_doktori_mu.pdf}{\emph{Topics in combinatorial number theory}}, D.Sc. thesis, Hungarian Academy of Sciences, 2017, Theorem~4.8.
+
+\bibitem[HHP03]{HHP03}
+N.~Hegyv\'ari, F.~Hennecart, and A.~Plagne,
+\href{https://doi.org/10.1515/crll.2003.055}{\emph{A proof of two Erd\H{o}s conjectures on restricted addition and further results}},
+J. Reine Angew. Math. \textbf{560} (2003), 199--220.
+
+\bibitem[HHP07]{HHP07}
+N.~Hegyv\'ari, F.~Hennecart, and A.~Plagne,
+\href{https://www.cmls.polytechnique.fr/perso/plagne/Erdos-Burr.pdf}{\emph{Answer to a question by Burr and Erd\H{o}s on restricted addition, and related results}},
+Combin. Probab. Comput. \textbf{16} (2007), 747--756.
+
+\bibitem[Hen05]{Hen05}
+F.~Hennecart, \href{https://doi.org/10.1007/s11139-005-0830-8}{\emph{On the restricted order of asymptotic bases of order two}},
+Ramanujan J. \textbf{9} (2005), 123--130.
+
+\bibitem[Plb]{Plby}
+\texttt{plby/lean-proofs} contributors, \emph{Erd\H{o}s Problem 339},
+Lean formalization, \href{https://github.com/plby/lean-proofs}{project repository}.
+
+\bibitem[Vel26]{Vel26}
+D.~Veljjanoski, \href{https://github.com/veljjanoski/erdos338}{\emph{Erd\H{o}s problem 338: partial results on restricted order}}, 2026.
+See also the Lean project
+\href{https://github.com/veljjanoski/erdos338-palomar/tree/a699263d0f7cdce0e5b3026bce86eab30973d0f8}{\texttt{erdos338-palomar}}, revision \lean{a699263}.
+
+\end{thebibliography}
+\end{document}

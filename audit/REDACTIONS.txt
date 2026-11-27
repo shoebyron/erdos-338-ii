@@ -1,0 +1,7 @@
+Public redacted copy of the Erdos 338(ii) verification audit.
+
+In logs/leanchecker.log, one absolute Windows user-profile prefix was
+replaced by %USERPROFILE%. The toolchain and executable names remain.
+All other original member contents are byte-identical, including the
+candidate sources, scripts, exit codes, and axiom reports. This ZIP
+uses normalized timestamps and omits original ZIP ownership metadata.

@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+message: "If you use this work, please cite the paper."
+title: "A uniform bound for the restricted order of an asymptotic basis: Lean proof and audit"
+type: software
+authors:
+  - name: "Excession"
+    website: "https://exsn.org"
+repository-code: "https://github.com/shoebyron/erdos-338"
+url: "https://exsn.org"
+license: MIT
+keywords:
+  - Erdos problem 338
+  - additive basis
+  - restricted order
+  - Lean 4
+preferred-citation:
+  type: article
+  title: "A uniform bound for the restricted order of an asymptotic basis"
+  authors:
+    - name: "Excession"
+  year: 2026
+  month: 11
+  url: "https://github.com/shoebyron/erdos-338"
